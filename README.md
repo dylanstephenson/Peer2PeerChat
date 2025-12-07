@@ -4,8 +4,6 @@ I created a networking program using Python tkinter that acts as a 2 way peer to
 
 I wrote this software to gain a better understanding of multiple devices on a network, and communicating between both of them. I wanted to see how it would work if the devices were on different OS, and if that would make a huge difference. I actually had less issues working the app between a Mac and a windows, then trying to get it to work between two macs on the same OS version.
 
-{Provide a link to your YouTube demonstration. It should be a 4-5 minute demo of the software running (you will need to show two pieces of software running and communicating with each other) and a walkthrough of the code.}
-
 [Software Demo Video](https://youtu.be/y19jbkK9oOY)
 
 # Network Communication
