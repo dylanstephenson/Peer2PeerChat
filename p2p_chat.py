@@ -118,7 +118,7 @@ class PeerChat:
                     return
                 msg = data.decode(errors="replace")
                 self.append_chat(f"Peer {addr[0]}:{addr[1]} says: {msg}")
-    
+
                 # Send response
                 conn.sendall(f"Received: {msg}".encode())
             except Exception as e:
