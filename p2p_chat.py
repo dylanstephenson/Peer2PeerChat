@@ -103,32 +103,26 @@ class PeerChat:
         self.master.after(0, _append)
 
     def server_loop(self):
-        """Accept incoming connections, read one message, display it, send a response, close."""
         while True:
             try:
                 conn, addr = self.server.accept()
-                with conn:
-                    try:
-                        data = conn.recv(4096)
-                    except Exception as e:
-                        self.append_chat(f"[Server] recv error: {e}")
-                        continue
-
-                    if not data:
-                        continue
-                    msg = data.decode(errors="replace")
-                    self.append_chat(f"Peer {addr[0]}:{addr[1]} says: {msg}")
-
-                    # simple ACK/response
-                    response = f"Received: {msg}"
-                    try:
-                        conn.sendall(response.encode())
-                    except Exception as e:
-                        self.append_chat(f"[Server] send error: {e}")
+                threading.Thread(target=self.handle_client, args=(conn, addr), daemon=True).start()
             except Exception as e:
-                # Non-fatal server accept error (socket closed etc)
                 self.append_chat(f"[Server] accept error: {e}")
-                break
+
+    def handle_client(self, conn, addr):
+        with conn:
+            try:
+                data = conn.recv(4096)
+                if not data:
+                    return
+                msg = data.decode(errors="replace")
+                self.append_chat(f"Peer {addr[0]}:{addr[1]} says: {msg}")
+    
+                # Send response
+                conn.sendall(f"Received: {msg}".encode())
+            except Exception as e:
+                self.append_chat(f"[Server] error: {e}")
 
     def send_message(self):
         """Connects to the peer, sends a message, waits for a response, displays it."""
